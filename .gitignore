@@ -7,6 +7,3 @@ __pycache__/
 
 # Generated model artifacts
 *.keras
-
-# Local Whisper run outputs
-osa2_whisper_tulokset_oma_ajo.csv
