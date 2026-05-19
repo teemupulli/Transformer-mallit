@@ -1,5 +1,12 @@
 Neuroverkkoprojekti-main/
-Oppimisprojekti_3_Transformer_mallit_tehtavananto.md
 
 __pycache__/
+*.pyc
 .ipynb_checkpoints/
+.vscode/
+
+# Generated model artifacts
+*.keras
+
+# Local Whisper run outputs
+osa2_whisper_tulokset_oma_ajo.csv
