@@ -7870,9 +7870,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="%C3%84%C3%A4nin%C3%A4ytteet">Ääninäytteet<a class="anchor-link" href="#%C3%84%C3%A4nin%C3%A4ytteet">¶</a></h2><p>Notebook lukee äänitiedostot automaattisesti kansiosta <code>audio_samples</code>. Tässä projektissa käytössä on useita lyhyitä itse nauhoitettuja näytteitä: selkeä puhe, taustahäly, nopeampi tai epäselvempi puhe, murteellinen/puhekielinen puhe sekä englanninkielisiä vertailunäytteitä.</p>
+<h2 id="%C3%84%C3%A4nin%C3%A4ytteet">Ääninäytteet<a class="anchor-link" href="#%C3%84%C3%A4nin%C3%A4ytteet">¶</a></h2><p>Notebook lukee äänitiedostot automaattisesti kansiosta <code>audio_samples</code>. Tässä projektissa käytössä on useita lyhyitä itse nauhoitettuja näytteitä: selkeä puhe, taustahäly, nopeampi tai epäselvempi puhe, murteellinen tai puhekielinen puhe sekä englanninkielisiä vertailunäytteitä.</p>
 <p>Kaikki nykyiset <code>.wav</code>-tiedostot ovat tarkistuksen perusteella 16 kHz mono -ääntä ja alle 30 sekuntia pitkiä, joten ne sopivat hyvin Whisperin kokeiluun.</p>
-<p>Jos tiedät jonkin näytteen tarkan sanamuodon, lisää se <code>oikea_teksti</code>-kenttään. Silloin notebook voi laskea myös WER-virhemittarin.</p>
+<p>Koska tarkat referenssitekstit on kirjoitettu tiedostoon <code>audio_samples/referenssitekstit.csv</code>, notebook voi laskea myös WER-virhemittarin ja tukea laadullista arviota numeerisella vertailulla.</p>
 </div>
 </div>
 </div>
@@ -7886,6 +7886,7 @@ a.anchor-link {
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">AUDIO_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"audio_samples"</span><span class="p">)</span>
 <span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">REFERENCE_PATH</span> <span class="o">=</span> <span class="n">AUDIO_DIR</span> <span class="o">/</span> <span class="s2">"referenssitekstit.csv"</span>
 
 <span class="n">sample_descriptions</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"selkea_puhe.wav"</span><span class="p">:</span> <span class="p">{</span>
@@ -7918,6 +7919,23 @@ a.anchor-link {
     <span class="s2">"selkea_puhe_4.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 4."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
     <span class="s2">"selkea_puhe_5.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 5."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
 <span class="p">}</span>
+
+<span class="k">if</span> <span class="n">REFERENCE_PATH</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">references_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">REFERENCE_PATH</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+    <span class="n">references_df</span> <span class="o">=</span> <span class="n">references_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">references_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">sample_descriptions</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Kuvaus puuttuu"</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">})</span>
+        <span class="n">sample_descriptions</span><span class="p">[</span><span class="n">filename</span><span class="p">][</span><span class="s2">"oikea_teksti"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"oikea_teksti"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"kommentti"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">comment</span> <span class="ow">and</span> <span class="n">sample_descriptions</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"kuvaus"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"Kuvaus puuttuu"</span><span class="p">:</span>
+            <span class="n">sample_descriptions</span><span class="p">[</span><span class="n">filename</span><span class="p">][</span><span class="s2">"kuvaus"</span><span class="p">]</span> <span class="o">=</span> <span class="n">comment</span>
+    <span class="n">filled_refs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"oikea_teksti"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sample_descriptions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Luettiin </span><span class="si">{</span><span class="n">filled_refs</span><span class="si">}</span><span class="s2"> referenssitekstiä tiedostosta </span><span class="si">{</span><span class="n">REFERENCE_PATH</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Referenssitiedostoa ei löytynyt: </span><span class="si">{</span><span class="n">REFERENCE_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">supported</span> <span class="o">=</span> <span class="p">{</span><span class="s2">".wav"</span><span class="p">,</span> <span class="s2">".mp3"</span><span class="p">,</span> <span class="s2">".m4a"</span><span class="p">,</span> <span class="s2">".flac"</span><span class="p">,</span> <span class="s2">".ogg"</span><span class="p">}</span>
 <span class="n">audio_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">supported</span><span class="p">])</span>
@@ -8110,10 +8128,9 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Valinnainen WER-laskenta.</span>
-<span class="c1"># Tässä ajossa oikeat sanasta sanaan -referenssit eivät ole tiedossa,</span>
-<span class="c1"># joten WER jätetään pois. Jos kirjoitat tarkat puhutut lauseet</span>
-<span class="c1"># sample_descriptions-sanastoon, voit ajaa tämän solun.</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># WER-laskenta, kun tarkat referenssit on kirjoitettu CSV-tiedostoon.</span>
+<span class="c1"># Mittari ei kerro kaikkea puheentunnistuksen laadusta, mutta se antaa</span>
+<span class="c1"># hyödyllisen numeerisen vertailun mallien välillä.</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">jiwer</span><span class="w"> </span><span class="kn">import</span> <span class="n">wer</span>
@@ -8139,12 +8156,16 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Raportointitaulukko-ja-tulosten-analyysi">Raportointitaulukko ja tulosten analyysi<a class="anchor-link" href="#Raportointitaulukko-ja-tulosten-analyysi">¶</a></h2><p>Tämä osio täydennetään oman ajon jälkeen. Älä käytä valmiiksi kirjoitettuja esimerkkituloksia, vaan aja Whisper-vertailusolu ja muodosta taulukot <code>results_df</code>-muuttujasta.</p>
-<p>Jos et ole kirjoittanut tarkkoja litteraatteja <code>oikea_teksti</code>-kenttiin, älä raportoi WER-lukua. Arvioi silloin laatua laadullisesti: mitkä sanat tunnistuivat oikein, missä tuli virheitä, ja miten virheet erosivat mallien välillä.</p>
+<h2 id="Raportointitaulukko-ja-tulosten-analyysi">Raportointitaulukko ja tulosten analyysi<a class="anchor-link" href="#Raportointitaulukko-ja-tulosten-analyysi">¶</a></h2><h3 id="K%C3%A4ytetyt-%C3%A4%C3%A4nin%C3%A4ytteet">Käytetyt ääninäytteet<a class="anchor-link" href="#K%C3%A4ytetyt-%C3%A4%C3%A4nin%C3%A4ytteet">¶</a></h3><p>Aineistossa on yhteensä 14 lyhyttä ääninäytettä. Mukana on selkeää suomenkielistä puhetta, viisi pidempää lisänäytettä eri puhujilta, nopeampi ja hieman epäselvempi suomenkielinen näyte, kaksi murteellista tai puhekielistä näytettä, yksi taustahälyinen näyte sekä neljä englanninkielistä vertailunäytettä. Näin kokeessa näkyvät sekä mallin perussuorituskyky että vaikeammat tilanteet, joissa ääntäminen, puhenopeus, murre tai taustamelu voivat heikentää tunnistusta.</p>
+<h3 id="Vertailu-eri-mallien-v%C3%A4lill%C3%A4">Vertailu eri mallien välillä<a class="anchor-link" href="#Vertailu-eri-mallien-v%C3%A4lill%C3%A4">¶</a></h3><p>Whisper <code>tiny</code> oli selvästi nopeampi kuin <code>base</code>. Oman ajon perusteella <code>tiny</code>-mallin keskimääräinen reaaliaikakerroin oli noin 0,78, kun <code>base</code>-mallilla vastaava arvo oli noin 1,25. Tämä tarkoittaa, että <code>tiny</code> käsitteli näytteet keskimäärin selvästi nopeammin, ja useissa lyhyissä näytteissä se toimi lähellä reaaliaikaa tai sitä nopeammin.</p>
+<p>Tarkkuudessa <code>base</code> oli kuitenkin parempi. Kun referenssitekstien avulla laskettiin WER, <code>tiny</code>-mallin keskimääräinen virhesuhde oli noin 0,59 ja <code>base</code>-mallin noin 0,41. Ero näkyi erityisesti pidemmissä suomenkielisissä näytteissä ja englanninkielisissä vertailuissa: <code>base</code> säilytti lauserakenteen paremmin, jätti vähemmän sanoja pois ja tuotti useammin kokonaisia järkeviä virkkeitä.</p>
+<h3 id="Miss%C3%A4-malli-onnistui-ja-ep%C3%A4onnistui">Missä malli onnistui ja epäonnistui<a class="anchor-link" href="#Miss%C3%A4-malli-onnistui-ja-ep%C3%A4onnistui">¶</a></h3><p>Molemmat mallit tunnistivat parhaiten selkeän ja rauhallisesti puhutun äänen. Englanninkielisissä näytteissä etenkin <code>base</code> suoriutui erittäin hyvin: esimerkiksi <code>english_sample1.wav</code> ja <code>english_sample2.wav</code> tunnistuivat lähes oikein sanasta sanaan. Tämä osoittaa, että esikoulutettu Whisper hyödyntää vahvaa monikielistä pohjaa myös silloin, kun projektin painopiste on suomenkielisessä puheessa.</p>
+<p>Vaikeimmat näytteet olivat murteelliset puheotteet ja osin myös taustahälyinen puhe. Näissä molemmat mallit tekivät paljon äänne- ja sanatasoisia virheitä, mutta <code>tiny</code> hajosi selvemmin ja tuotti paikoin hyvin epätarkkaa tekstiä. Erityisen hankala oli <code>murre_aaninayte.wav</code>, jossa molemmat mallit jäivät kauas referenssistä. Myös <code>selkea_puhe_2.wav</code> osoitti, että pienempi malli voi joskus menettää pitkän lauseen rakenteen lähes kokonaan, vaikka puhe ei itsessään ole erityisen vaikeaa.</p>
+<h3 id="Milloin-pienempi-malli-riitt%C3%A4%C3%A4">Milloin pienempi malli riittää<a class="anchor-link" href="#Milloin-pienempi-malli-riitt%C3%A4%C3%A4">¶</a></h3><p>Pienempi <code>tiny</code>-malli riittää tilanteissa, joissa halutaan nopea karkea litterointi selkeästä lyhyestä puheesta eikä pieniä virheitä pidetä kriittisinä. Se voi sopia esimerkiksi kokeiluihin, käyttöliittymäprototyyppeihin tai tilanteisiin, joissa vasteaika on tärkeämpi kuin tarkka sanamuoto. Kun taas tarvitaan parempaa tarkkuutta, pidempiä yhtenäisiä lauseita tai enemmän kestävyyttä eri puhujien ja vaikeampien näytteiden kanssa, <code>base</code> on tässä aineistossa perustellusti parempi valinta.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8a27fa81">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e24ce3b8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8180,31 +8201,30 @@ a.anchor-link {
     <span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">averages</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Kirjoita analyysiin oman ajosi perusteella esimerkiksi:"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"- kumpi malli oli nopeampi ja kuinka suuri ero oli"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"- missä näytteissä tunnistus onnistui parhaiten"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"- missä näytteissä tuli selviä virheitä"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"- vaikuttiko taustahäly, nopea puhe, murre tai englannin kieli tuloksiin"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"WER"</span> <span class="ow">in</span> <span class="n">results_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">quality</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">results_df</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"malli"</span><span class="p">,</span> <span class="s2">"kieli"</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">keskiarvo_WER</span><span class="o">=</span><span class="p">(</span><span class="s2">"WER"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3ea7c276">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=42088745">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Analyysi-oman-ajon-j%C3%A4lkeen">Analyysi oman ajon jälkeen<a class="anchor-link" href="#Analyysi-oman-ajon-j%C3%A4lkeen">¶</a></h3><p>Täydennä tähän lopulliset havainnot vasta oman ajon jälkeen.</p>
-<ul>
-<li><strong>Nopeus:</strong> Kirjaa, mikä malli oli nopeampi ja millaiset keskimääräiset ajoajat sait.</li>
-<li><strong>Tarkkuus:</strong> Kuvaa esimerkkien avulla, kumman mallin teksti vastasi paremmin puhetta.</li>
-<li><strong>Vaikeat näytteet:</strong> Arvioi, miten taustahäly, nopea puhe ja murteellisuus vaikuttivat tunnistukseen.</li>
-<li><strong>Englanti vs. suomi:</strong> Vertaa, toimiko englanninkielinen puhe paremmin, huonommin vai suunnilleen samalla tasolla kuin suomenkielinen puhe.</li>
-</ul>
-<h3 id="Yhteys-osaan-1">Yhteys osaan 1<a class="anchor-link" href="#Yhteys-osaan-1">¶</a></h3><p>Osassa 1 transformer käsitteli tekstin tokenijonoa ja ennusti seuraavaa tokenia. Whisperissä syöte ei ole tekstinä, vaan ääni muunnetaan ensin mel-spektrogrammiksi eli aika-taajuuspiirteiden jonoksi. Molemmissa tapauksissa transformer hyödyntää attention-mekanismia järjestetyn syötteen riippuvuuksien mallintamiseen. Tämä on transformerien vahvuus: sama perusidea sopii sekä tekstin että puheen kaltaisiin sekventiaalisiin aineistoihin.</p>
+<h3 id="Analyysi-oman-ajon-j%C3%A4lkeen">Analyysi oman ajon jälkeen<a class="anchor-link" href="#Analyysi-oman-ajon-j%C3%A4lkeen">¶</a></h3><p>Oman ajon perusteella <code>base</code> oli tämän aineiston kokonaisuutena parempi malli, vaikka se oli hitaampi. Se tuotti keskimäärin tarkempaa tekstiä sekä suomeksi että englanniksi, ja ero näkyi erityisesti silloin, kun lauseet olivat pitkiä tai puheessa oli vaihtelua. <code>tiny</code> oli hyödyllinen nopeuden vuoksi, mutta tunnistus hajosi helpommin tavurakenteisiin, vääristyneisiin sanoihin ja pois jääviin osiin.</p>
+<p>Taustahäly, nopea puhe ja murteellisuus heikensivät kaikkien mallien tuloksia, mikä näkyi erityisesti suomalaisissa murresanoissa ja sananrajoissa. Silti tuloksissa on selvä looginen ero mallikokojen välillä: suurempi malli sietää paremmin vaihtelua ja säilyttää useammin lauseen merkityksen, vaikka jokainen sana ei osuisikaan täysin oikein. Tästä syystä kokeen päätelmä on, että <code>tiny</code> sopii nopeaan kokeiluun, mutta <code>base</code> on käytännöllisempi, kun tavoitteena on käyttökelpoisempi litterointi.</p>
+<h3 id="Miksi-Whisper-k%C3%A4ytt%C3%A4%C3%A4-mel-spektrogrammia?">Miksi Whisper käyttää mel-spektrogrammia?<a class="anchor-link" href="#Miksi-Whisper-k%C3%A4ytt%C3%A4%C3%A4-mel-spektrogrammia?">¶</a></h3><p>Mel-spektrogrammi tiivistää puhesignaalin sellaiseen muotoon, jossa ajan mukana muuttuvat taajuuspiirteet näkyvät selkeinä rakenteina. Tämä helpottaa neuroverkon oppimista, koska raakaaaltomuoto sisältää paljon yksityiskohtaista vaihtelua, joka ei sellaisenaan ole mallille yhtä informatiivista. Mel-asteikko painottaa ihmiskuulon kannalta olennaisia taajuuksia, joten malli saa syötteeksi tiiviimmän ja merkityksellisemmän esityksen puheesta.</p>
+<h3 id="Yhteys-osaan-1">Yhteys osaan 1<a class="anchor-link" href="#Yhteys-osaan-1">¶</a></h3><p>Osassa 1 transformer käsitteli tekstin tokenijonoa ja ennusti seuraavaa tokenia. Whisperissa syöte ei ole tekstiä vaan ääntä, joka muunnetaan ensin mel-spektrogrammiksi eli aika-taajuuspiirteiden jonoksi. Molemmissa tapauksissa transformer hyödyntää attention-mekanismia järjestetyn syötteen riippuvuuksien mallintamiseen. Siksi sama perusarkkitehtuuri toimii sekä tekstigeneraatiossa että puheentunnistuksessa, vaikka syötteen esitysmuoto on eri.</p>
 </div>
 </div>
 </div>

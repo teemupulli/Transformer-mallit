@@ -1,0 +1,15 @@
+tiedosto,oikea_teksti,kommentti
+aaninayte_nopea.wav,Puhun vähän nopeammin ja epäselvemmin jotta nähdään kuinka hyvin puheentunnistus toimii kun ääntäminen ei ole täysin selkeää,nopea tai hieman epaselva suomenkielinen puhe
+english_sample1.wav,This is a short English speech sample for testing how well the program recognizes another language,englanninkielinen puhe
+english_sample2.wav,This is a short English speech sample for testing how well Whisper recognizes another language,englanninkielinen puhe
+english_sample3.wav,This is a short English speech sample for testing how well Whisper recognizes another language,englanninkielinen puhe
+english_sample_fast.wav,This is a short English speech sample for testing how well Whisper recognizes another language,nopea englanninkielinen puhe
+murre_aaninayte.wav,Puhun ihan hissukseen ja koitan sannoo sanat niin selekeesti ku ossoon,murteellinen tai puhekielinen suomenkielinen puhe
+murre_aaninayte2.wav,Mie puhun ihan hissukseen ja koetan sannoo sanat mahollisimman selekeesti,murteellinen tai puhekielinen suomenkielinen puhe
+selkea_puhe.wav,Tämä on selkeä suomenkielinen ääninäyte. Kiinnitän huomiota siihen että puhun tasaisesti ja ääntäminen on selkeää,selkea suomenkielinen puhe
+selkea_puhe_1.wav,Suomen kieli. Suomen kieli kuuluu urarilaiseen kielikuntaan ja sen suomalaisukrilaisen haaran itämeren suomalaisiin kieliin. Suomen kielen puhujia on noin kuusi miljoonaa.,selkea suomenkielinen puhe - eri puhuja
+selkea_puhe_2.wav,Suomen kielisiä väestöryhmiä on Pohjois-Ruotsissa meänkielenpuhujat Norjassa kveenit sekä Inkerissä missä suomen kieli on tuhat yhdeksän sataa luvun mittaan su,selkea suomenkielinen puhe - eri puhuja
+selkea_puhe_3.wav,Tän uudempia suomalaisryhmiä Eurooppaan sekä etenkin tuhat kahdeksan sataa luvulla Pohjois-Amerikkaan jossa suurin osa siirtolaisia on kuitenkin jo kielellisesti sulautunut su,selkea suomenkielinen puhe - eri puhuja
+selkea_puhe_4.wav,Men muuttoliikkeen tuloksena Ruotsiin. Suomen kieli on voimakkaasti taipuva aglutinoiva kieli. Sanajärjestys on toissijainen ja lauseenjäsenten perusjärjestys on su,selkea suomenkielinen puhe - eri puhuja
+selkea_puhe_5.wav,Suomen kieli. Suomen kieli kuuluu urarilaiseen kielikuntaan ja sen suomalaisukrilaisen haaran itämeren suomalaisiin kieliin. Suomen kielen puhujia on noin kuusi miljoonaa.,selkea suomenkielinen puhe - eri puhuja
+taustahaly.wav,Tämä ääninäyte on nauhoitettu taustahälyn kanssa. Haluan testata tunnistaako ohjelma puheen myös vaikeammassa tilanteessa.,suomenkielinen puhe taustahalyn kanssa
