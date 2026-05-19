@@ -7803,7 +7803,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">Oppimisprojekti 3, osa 2: puheentunnistus Whisper-mallilla<a class="anchor-link" href="#Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">¶</a></h1><p>Tässä notebookissa käytetään Hugging Facen <code>transformers</code>-kirjaston Whisper-malleja suomenkielisen puheen tunnistamiseen. Notebook lukee itse nauhoitetut alle 30 sekunnin äänitteet kansiosta <code>audio_samples</code> ja ajaa vertailun usealla mallikoolla.</p>
-<p><strong>Tekoälyn käyttö:</strong> Notebookin runko, analyysikysymykset ja raporttirakenne on laadittu Codex-avustajalla. Ääninäytteet on nauhoitettu itse, ja lopullinen arviointi täydennetään ajotulosten perusteella.</p>
+<p><strong>Tekoälyn käyttö:</strong> Tekoälyä käytettiin apuna notebookin rakenteen suunnittelussa, koodin korjaamisessa ja raporttipohjan muotoilussa. Ääninäytteet on nauhoitettu itse, Whisper-ajot tehdään paikallisesti, ja lopullinen arviointi kirjoitetaan omien ajotulosten perusteella.</p>
 </div>
 </div>
 </div>
@@ -7832,7 +7832,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># Tarvittaessa asenna riippuvuudet esimerkiksi:</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tarvittaessa asenna riippuvuudet esimerkiksi:</span>
 <span class="c1"># %pip install torch transformers librosa soundfile matplotlib pandas jiwer accelerate</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -7884,7 +7884,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">AUDIO_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"audio_samples"</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">AUDIO_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"audio_samples"</span><span class="p">)</span>
 <span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">sample_descriptions</span> <span class="o">=</span> <span class="p">{</span>
@@ -7938,7 +7938,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">load_audio</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">):</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">load_audio</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">):</span>
     <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">target_sr</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">get_duration</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
@@ -7948,8 +7948,7 @@ a.anchor-link {
 <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">audio_files</span><span class="p">:</span>
     <span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="n">load_audio</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">desc</span> <span class="o">=</span> <span class="n">sample_descriptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"kuvaus"</span><span class="p">,</span> <span class="s2">"Kuvaus puuttuu"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span>
-<span class="p">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">}:</span> <span class="p">{</span><span class="n">duration</span><span class="p">:</span><span class="mf">.2</span><span class="n">f</span><span class="p">}</span> <span class="n">s</span><span class="p">,</span> <span class="p">{</span><span class="n">sr</span><span class="p">}</span> <span class="n">Hz</span><span class="p">,</span> <span class="p">{</span><span class="n">desc</span><span class="p">}</span><span class="s2">")</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s, </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz, </span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">Audio</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">sr</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -7975,7 +7974,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_mel_spectrogram</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_mel_spectrogram</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
     <span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="n">load_audio</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">mel</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="n">n_mels</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
     <span class="n">mel_db</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">power_to_db</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
@@ -8018,9 +8017,10 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">MODEL_SIZES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"tiny"</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">]</span>  <span class="c1"># kokeile my?s: "small", "medium", "large-v3"</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">MODEL_SIZES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"tiny"</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">]</span>  <span class="c1"># voit kokeilla myös: "small", "medium", "large-v3"</span>
 <span class="n">LANGUAGE</span> <span class="o">=</span> <span class="s2">"fi"</span>
 <span class="n">TASK</span> <span class="o">=</span> <span class="s2">"transcribe"</span>
+<span class="n">MAX_SAMPLES</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># vaihda arvoksi 1, jos haluat ensin nopean testiajon</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">model_id</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
     <span class="k">return</span> <span class="s2">"openai/whisper-large-v3"</span> <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="s2">"large-v3"</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"openai/whisper-</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">"</span>
@@ -8028,9 +8028,11 @@ a.anchor-link {
 
 <span class="k">def</span><span class="w"> </span><span class="nf">load_whisper</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">model_id</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Ladataan malli </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">..."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">processor</span> <span class="o">=</span> <span class="n">WhisperProcessor</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">WhisperForConditionalGeneration</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Malli </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> ladattu."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">processor</span><span class="p">,</span> <span class="n">model</span>
 
 
@@ -8059,15 +8061,19 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">files_to_run</span> <span class="o">=</span> <span class="n">audio_files</span><span class="p">[:</span><span class="n">MAX_SAMPLES</span><span class="p">]</span> <span class="k">if</span> <span class="n">MAX_SAMPLES</span> <span class="k">else</span> <span class="n">audio_files</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Ajettavia tiedostoja: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files_to_run</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mallit: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODEL_SIZES</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">MODEL_SIZES</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span>
-<span class="n">Ladataan</span> <span class="n">Whisper</span> <span class="p">{</span><span class="n">size</span><span class="p">}</span><span class="o">...</span><span class="s2">")</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Aloitetaan Whisper </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">..."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">processor</span><span class="p">,</span> <span class="n">whisper_model</span> <span class="o">=</span> <span class="n">load_whisper</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">audio_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Tunnistetaan: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files_to_run</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  [</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files_to_run</span><span class="p">)</span><span class="si">}</span><span class="s2">] Tunnistetaan: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">language</span> <span class="o">=</span> <span class="s2">"en"</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"fi"</span>
         <span class="n">prediction</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">transcribe</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">whisper_model</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">sample_descriptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"oikea_teksti"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
@@ -8081,13 +8087,16 @@ a.anchor-link {
             <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="n">ref</span><span class="p">,</span>
             <span class="s2">"tunnistus"</span><span class="p">:</span> <span class="n">prediction</span><span class="p">,</span>
         <span class="p">})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    Valmis </span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sekunnissa"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">del</span> <span class="n">whisper_model</span>
     <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">"cuda"</span><span class="p">:</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
 
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"osa2_whisper_tulokset_oma_ajo.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">results_df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Tulokset tallennettu tiedostoon osa2_whisper_tulokset_oma_ajo.csv"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8101,10 +8110,10 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># Valinnainen WER-laskenta.</span>
-<span class="c1"># T?ss? ajossa oikeat sanasta sanaan -referenssit eiv?t ole tiedossa,</span>
-<span class="c1"># joten WER j?tet??n pois. Jos kirjoitat tarkat puhutut lauseet</span>
-<span class="c1"># sample_descriptions-sanastoon, voit ajaa t?m?n solun.</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Valinnainen WER-laskenta.</span>
+<span class="c1"># Tässä ajossa oikeat sanasta sanaan -referenssit eivät ole tiedossa,</span>
+<span class="c1"># joten WER jätetään pois. Jos kirjoitat tarkat puhutut lauseet</span>
+<span class="c1"># sample_descriptions-sanastoon, voit ajaa tämän solun.</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">jiwer</span><span class="w"> </span><span class="kn">import</span> <span class="n">wer</span>
@@ -8115,7 +8124,7 @@ a.anchor-link {
         <span class="p">)</span>
         <span class="n">display</span><span class="p">(</span><span class="n">results_df</span><span class="p">[[</span><span class="s2">"malli"</span><span class="p">,</span> <span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">"kieli"</span><span class="p">,</span> <span class="s2">"aika_s"</span><span class="p">,</span> <span class="s2">"reaaliaikakerroin"</span><span class="p">,</span> <span class="s2">"WER"</span><span class="p">,</span> <span class="s2">"tunnistus"</span><span class="p">]])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"WER-laskentaa ei ajettu, koska tarkkoja referenssitekstej? ei ole t?ytetty."</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"WER-laskentaa ei ajettu, koska tarkkoja referenssitekstejä ei ole täytetty."</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"WER-laskentaa ei ajettu:"</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
 </pre></div>
@@ -8130,176 +8139,12 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Raportointitaulukko-ja-tulokset">Raportointitaulukko ja tulokset<a class="anchor-link" href="#Raportointitaulukko-ja-tulokset">¶</a></h2><p>Vertailu ajettiin kaikilla <code>audio_samples</code>-kansion 14 WAV-näytteellä ja kahdella Whisper-mallilla: <code>tiny</code> ja <code>base</code>. Ajo tehtiin CPU:lla. Aineistossa oli 10 suomenkielistä ja 4 englanninkielistä näytettä.</p>
-<p>Tarkkoja sanasta sanaan kirjoitettuja referenssitekstejä ei ole näille äänitteille talletettu, joten arviointi tehdään tässä laadullisesti vertaamalla mallien tuottamia transkriptioita ja mittaamalla nopeutta. WER-lukua ei raportoida, koska väärä referenssiteksti antaisi harhaanjohtavan tuloksen.</p>
-<table>
-<thead>
-<tr>
-<th>Ääninäyte</th>
-<th style="text-align:right">Kesto</th>
-<th style="text-align:right">tiny aika</th>
-<th style="text-align:right">base aika</th>
-<th>tiny tunnistus</th>
-<th>base tunnistus</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>aaninayte_nopea.wav</code></td>
-<td style="text-align:right">5.91 s</td>
-<td style="text-align:right">1.15 s</td>
-<td style="text-align:right">1.46 s</td>
-<td>Puhulvahan nopeammin ja epäselvämin, jolla nähdään kuinka hyvin puheen tunnistustoimin kuin aantaminen ja...</td>
-<td>Puhun vähän nopeammin ja epäselvämin, jotta nähdään kuinka hyvin puheen tunnistus toimii kuin aantaminen...</td>
-</tr>
-<tr>
-<td><code>english_sample1.wav</code></td>
-<td style="text-align:right">8.81 s</td>
-<td style="text-align:right">0.61 s</td>
-<td style="text-align:right">0.77 s</td>
-<td>T.C. is a short English-peed sample for testing how well the program recognizes another language.</td>
-<td>This is a short English speech sample for testing how well the program recognizes another language.</td>
-</tr>
-<tr>
-<td><code>english_sample2.wav</code></td>
-<td style="text-align:right">9.24 s</td>
-<td style="text-align:right">0.44 s</td>
-<td style="text-align:right">0.82 s</td>
-<td>This is a short English speed sample for testing how well whisper recognizes another language.</td>
-<td>This is a short English speech sample for testing how well Whisper recognizes another language.</td>
-</tr>
-<tr>
-<td><code>english_sample3.wav</code></td>
-<td style="text-align:right">6.08 s</td>
-<td style="text-align:right">0.53 s</td>
-<td style="text-align:right">0.90 s</td>
-<td>This is a short English speech sample for testing how well these per record passes on a trot language.</td>
-<td>is a short English speech sample for testing how well we use per recognition as a natural language.</td>
-</tr>
-<tr>
-<td><code>english_sample_fast.wav</code></td>
-<td style="text-align:right">4.71 s</td>
-<td style="text-align:right">0.61 s</td>
-<td style="text-align:right">0.91 s</td>
-<td>This is a shorting speed sample for testing how well vis-pro record passes on other language.</td>
-<td>This is a short English speech sample for testing how a Whisper recognizes another language.</td>
-</tr>
-<tr>
-<td><code>murre_aaninayte.wav</code></td>
-<td style="text-align:right">4.37 s</td>
-<td style="text-align:right">0.67 s</td>
-<td style="text-align:right">1.02 s</td>
-<td>hieni histukseen, koita sanon sanot niin seläkestekku ossoa.</td>
-<td>ja hissuksia ja koita sanot niin seläkästikko ossaan.</td>
-</tr>
-<tr>
-<td><code>murre_aaninayte2.wav</code></td>
-<td style="text-align:right">4.97 s</td>
-<td style="text-align:right">0.72 s</td>
-<td style="text-align:right">1.08 s</td>
-<td>Mietpuhun ihan hisuksia ja koetaan sanossa on, että mahdollisimman seläkestin.</td>
-<td>Mien puhun ihan hissukse ja koitan sanon sanat mahdollisimman seläkästi.</td>
-</tr>
-<tr>
-<td><code>selkea_puhe.wav</code></td>
-<td style="text-align:right">9.75 s</td>
-<td style="text-align:right">1.24 s</td>
-<td style="text-align:right">1.46 s</td>
-<td>Tämä on selkeä Suomen kielenen äänen äänenäytä. Kiinit on huomioita siihen, että puhuntasaisesti ja ääntä...</td>
-<td>Tämä on selkeä Suomen kielinen aanninäötä. Kiinnit on huomioita siihen, että puhun tasaisesti ja aantamin...</td>
-</tr>
-<tr>
-<td><code>selkea_puhe_1.wav</code></td>
-<td style="text-align:right">15.00 s</td>
-<td style="text-align:right">1.52 s</td>
-<td style="text-align:right">1.87 s</td>
-<td>Suomen kielikuluurallilaisen kielikuntaan ja sen suomalaisukkilaisen haaran itäveren suomalaisiin kieliin...</td>
-<td>Suomen kieli, suomen kieli kuuluu uralilaisen kieli kuntaan ja sen suomalaisuukkrilaisen haaran itäveren...</td>
-</tr>
-<tr>
-<td><code>selkea_puhe_2.wav</code></td>
-<td style="text-align:right">15.00 s</td>
-<td style="text-align:right">0.55 s</td>
-<td style="text-align:right">1.77 s</td>
-<td>Suomen keli on tyydyksen saadaan luon mittaan suuri.</td>
-<td>Kielisiä väestöryhmää on Pohjois-Ruotsissa, meän kielen puhujat, norjassa, kvenit, sekä inkerissä, missä...</td>
-</tr>
-<tr>
-<td><code>selkea_puhe_3.wav</code></td>
-<td style="text-align:right">15.00 s</td>
-<td style="text-align:right">1.54 s</td>
-<td style="text-align:right">1.83 s</td>
-<td>Uudenpia Suomalaisuithmiä on syntynyt elroppaan sekä etenkin tuohat kadeksansa taluvulla pohjoisamerikkaa...</td>
-<td>Tätä uudenpia Suomalaislyhmia on syntynyt Eurooppaan sekä etenkin 1800-luvulla Pohjoisamerikkaan, jossa s...</td>
-</tr>
-<tr>
-<td><code>selkea_puhe_4.wav</code></td>
-<td style="text-align:right">15.00 s</td>
-<td style="text-align:right">1.39 s</td>
-<td style="text-align:right">1.86 s</td>
-<td>muuttoliikkentuloksena ruotsiin. Suomen kieli on voimakkaasti tai pova, algelutinoivakielin. Sanajärjesty...</td>
-<td>muuttodikentulaksena ruotsii. Suomen kieli on voimakkaasti taipova, algolutinoiva kieli. Sana järjestys o...</td>
-</tr>
-<tr>
-<td><code>selkea_puhe_5.wav</code></td>
-<td style="text-align:right">15.00 s</td>
-<td style="text-align:right">1.19 s</td>
-<td style="text-align:right">1.92 s</td>
-<td>Suomen kielikuluurailaisen kielikuntaan ja sen suomalaisuukkilaisen haram itäveren suomalaisiin kieliin S...</td>
-<td>Suomen kieli, suomen kieli kuuluu uralilaisen kielikuntaan ja sen suomalaisuukkrilaisen haaran itäveren s...</td>
-</tr>
-<tr>
-<td><code>taustahaly.wav</code></td>
-<td style="text-align:right">7.70 s</td>
-<td style="text-align:right">0.96 s</td>
-<td style="text-align:right">1.44 s</td>
-<td>Tämä on näytä on lautettu taustahely on kanssa. Lua on testotat tunnistakohjema puheen myös vaikea, mutta...</td>
-<td>Tämä on näytöön nauhoitettu taustahälön kanssa. Alue on testata tunnistakouhelman puheen myös vaikeamassa...</td>
-</tr>
-</tbody>
-</table>
-<p>Keskiarvot:</p>
-<table>
-<thead>
-<tr>
-<th>Malli</th>
-<th style="text-align:right">Keskimääräinen ajoaika</th>
-<th style="text-align:right">Keskimääräinen reaaliaikakerroin</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>tiny</td>
-<td style="text-align:right">0.94 s</td>
-<td style="text-align:right">0.11</td>
-</tr>
-<tr>
-<td>base</td>
-<td style="text-align:right">1.36 s</td>
-<td style="text-align:right">0.15</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Analyysi">Analyysi<a class="anchor-link" href="#Analyysi">¶</a></h3><p>Kun mallit oli ladattu välimuistiin, koko 14 näytteen ajo oli paikallisella CPU:lla nopea. <code>tiny</code> oli nopeampi: keskimäärin noin 0.94 sekuntia per näyte. <code>base</code> oli hitaampi, noin 1.36 sekuntia per näyte, mutta tuotti useissa kohdissa luettavampaa ja oikeamman näköistä tekstiä.</p>
-<p>Suomenkielisissä näytteissä pienet Whisper-mallit tunnistivat usein aiheen ja lauserakenteen, mutta tekivät paljon kirjoitusvirheitä ja väärinkuulemisia. Pitkissä selkeissä lisänäytteissä <code>base</code> sai jo varsin käyttökelpoisia lauseita, esimerkiksi Suomen kieltä käsittelevissä näytteissä. Lyhyissä testilauseissa, taustahälyssä ja nopeassa puheessa virheitä jäi enemmän.</p>
-<p>Englanninkieliset näytteet onnistuivat selvästi paremmin kuin suomenkieliset. Tämä näkyy erityisesti <code>english_sample2.wav</code>- ja <code>english_sample_fast.wav</code>-näytteissä, joissa <code>base</code> tuotti lähes virheettömän tekstin. Tämä on odotettavaa, koska Whisperin esikoulutusaineistossa englanti on erittäin vahvasti edustettuna.</p>
-<p>Murteellinen tai puhekielinen puhe oli vaikeinta. Malli yritti normalisoida ääntä kirjakielen suuntaan tai tuotti sanoja, jotka kuulostavat suomen kaltaisilta mutta eivät vastaa puhetta täydellisesti. Taustahäly heikensi tunnistusta, mutta <code>base</code> säilytti yleensä enemmän lauseen rakenteesta kuin <code>tiny</code>.</p>
-<h3 id="Yhteys-osaan-1">Yhteys osaan 1<a class="anchor-link" href="#Yhteys-osaan-1">¶</a></h3><p>Osassa 1 transformer käsitteli tekstin tokenijonoa ja ennusti seuraavaa tokenia. Whisperissä syöte ei ole tekstinä, vaan ääni muunnetaan ensin mel-spektrogrammiksi eli aika-taajuuspiirteiden jonoksi. Molemmissa tapauksissa transformer hyödyntää attention-mekanismia järjestetyn syötteen riippuvuuksien mallintamiseen. Tämä on transformerien vahvuus: sama perusidea sopii sekä tekstin että puheen kaltaisiin sekventiaalisiin aineistoihin.</p>
+<h2 id="Raportointitaulukko-ja-tulosten-analyysi">Raportointitaulukko ja tulosten analyysi<a class="anchor-link" href="#Raportointitaulukko-ja-tulosten-analyysi">¶</a></h2><p>Tämä osio täydennetään oman ajon jälkeen. Älä käytä valmiiksi kirjoitettuja esimerkkituloksia, vaan aja Whisper-vertailusolu ja muodosta taulukot <code>results_df</code>-muuttujasta.</p>
+<p>Jos et ole kirjoittanut tarkkoja litteraatteja <code>oikea_teksti</code>-kenttiin, älä raportoi WER-lukua. Arvioi silloin laatua laadullisesti: mitkä sanat tunnistuivat oikein, missä tuli virheitä, ja miten virheet erosivat mallien välillä.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=869863d1">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Vapaaehtoinen-Gradio-k%C3%A4ytt%C3%B6liittym%C3%A4">Vapaaehtoinen Gradio-käyttöliittymä<a class="anchor-link" href="#Vapaaehtoinen-Gradio-k%C3%A4ytt%C3%B6liittym%C3%A4">¶</a></h2><p>Jos haluat kokeilla mikrofonia selaimessa, poista kommentit ja aja solu. Tämä ei ole pakollinen palautukseen.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ba16ac35">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8a27fa81">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8307,28 +8152,59 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># %pip install gradio</span>
-<span class="c1"># import gradio as gr</span>
-<span class="c1">#</span>
-<span class="c1"># processor, whisper_model = load_whisper("base")</span>
-<span class="c1">#</span>
-<span class="c1"># def transcribe_gradio(audio_path):</span>
-<span class="c1">#     if audio_path is None:</span>
-<span class="c1">#         return ""</span>
-<span class="c1">#     text, duration, seconds = transcribe(Path(audio_path), processor, whisper_model)</span>
-<span class="c1">#     return f"{text}</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="s2">"results_df"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="ow">or</span> <span class="n">results_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Aja ensin Whisper-vertailusolu, jotta results_df muodostuu."</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">comparison</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">results_df</span>
+        <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">"kieli"</span><span class="p">,</span> <span class="s2">"kesto_s"</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="s2">"malli"</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">"aika_s"</span><span class="p">,</span> <span class="s2">"reaaliaikakerroin"</span><span class="p">,</span> <span class="s2">"tunnistus"</span><span class="p">],</span>
+            <span class="n">aggfunc</span><span class="o">=</span><span class="s2">"first"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="p">)</span>
 
-<span class="n">Kesto</span><span class="p">:</span> <span class="p">{</span><span class="n">duration</span><span class="p">:</span><span class="mf">.1</span><span class="n">f</span><span class="p">}</span> <span class="n">s</span><span class="p">,</span> <span class="n">tunnistusaika</span><span class="p">:</span> <span class="p">{</span><span class="n">seconds</span><span class="p">:</span><span class="mf">.1</span><span class="n">f</span><span class="p">}</span> <span class="n">s</span><span class="s2">"</span>
-<span class="c1">#</span>
-<span class="c1"># demo = gr.Interface(</span>
-<span class="c1">#     fn=transcribe_gradio,</span>
-<span class="c1">#     inputs=gr.Audio(sources=["microphone", "upload"], type="filepath"),</span>
-<span class="c1">#     outputs=gr.Textbox(lines=6),</span>
-<span class="c1">#     title="Whisper suomenkieliseen puheentunnistukseen",</span>
-<span class="c1"># )</span>
-<span class="c1"># demo.launch()</span>
+    <span class="n">averages</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">results_df</span>
+        <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"malli"</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+            <span class="n">naytteita</span><span class="o">=</span><span class="p">(</span><span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">"count"</span><span class="p">),</span>
+            <span class="n">keskim_aika_s</span><span class="o">=</span><span class="p">(</span><span class="s2">"aika_s"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">),</span>
+            <span class="n">keskim_reaaliaikakerroin</span><span class="o">=</span><span class="p">(</span><span class="s2">"reaaliaikakerroin"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">display</span><span class="p">(</span><span class="n">comparison</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">averages</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Kirjoita analyysiin oman ajosi perusteella esimerkiksi:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"- kumpi malli oli nopeampi ja kuinka suuri ero oli"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"- missä näytteissä tunnistus onnistui parhaiten"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"- missä näytteissä tuli selviä virheitä"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"- vaikuttiko taustahäly, nopea puhe, murre tai englannin kieli tuloksiin"</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3ea7c276">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Analyysi-oman-ajon-j%C3%A4lkeen">Analyysi oman ajon jälkeen<a class="anchor-link" href="#Analyysi-oman-ajon-j%C3%A4lkeen">¶</a></h3><p>Täydennä tähän lopulliset havainnot vasta oman ajon jälkeen.</p>
+<ul>
+<li><strong>Nopeus:</strong> Kirjaa, mikä malli oli nopeampi ja millaiset keskimääräiset ajoajat sait.</li>
+<li><strong>Tarkkuus:</strong> Kuvaa esimerkkien avulla, kumman mallin teksti vastasi paremmin puhetta.</li>
+<li><strong>Vaikeat näytteet:</strong> Arvioi, miten taustahäly, nopea puhe ja murteellisuus vaikuttivat tunnistukseen.</li>
+<li><strong>Englanti vs. suomi:</strong> Vertaa, toimiko englanninkielinen puhe paremmin, huonommin vai suunnilleen samalla tasolla kuin suomenkielinen puhe.</li>
+</ul>
+<h3 id="Yhteys-osaan-1">Yhteys osaan 1<a class="anchor-link" href="#Yhteys-osaan-1">¶</a></h3><p>Osassa 1 transformer käsitteli tekstin tokenijonoa ja ennusti seuraavaa tokenia. Whisperissä syöte ei ole tekstinä, vaan ääni muunnetaan ensin mel-spektrogrammiksi eli aika-taajuuspiirteiden jonoksi. Molemmissa tapauksissa transformer hyödyntää attention-mekanismia järjestetyn syötteen riippuvuuksien mallintamiseen. Tämä on transformerien vahvuus: sama perusidea sopii sekä tekstin että puheen kaltaisiin sekventiaalisiin aineistoihin.</p>
 </div>
 </div>
 </div>
