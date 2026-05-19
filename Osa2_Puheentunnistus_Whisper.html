@@ -7802,8 +7802,8 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">Oppimisprojekti 3, osa 2: puheentunnistus Whisper-mallilla<a class="anchor-link" href="#Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">¶</a></h1><p>T?ss? notebookissa k?ytet??n Hugging Facen <code>transformers</code>-kirjaston Whisper-malleja suomenkielisen puheen tunnistamiseen. Notebook on tehty niin, ett? voit lis?t? omat alle 30 sekunnin ??nitteesi kansioon <code>audio_samples</code> ja ajaa vertailun usealla mallikoolla.</p>
-<p><strong>Teko?lyn k?ytt?:</strong> Notebookin runko, analyysikysymykset ja raporttirakenne on laadittu Codex-avustajalla. ??nin?ytteet ja lopullinen arviointi t?ydennet??n omien ajotulosten perusteella.</p>
+<h1 id="Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">Oppimisprojekti 3, osa 2: puheentunnistus Whisper-mallilla<a class="anchor-link" href="#Oppimisprojekti-3,-osa-2:-puheentunnistus-Whisper-mallilla">¶</a></h1><p>Tässä notebookissa käytetään Hugging Facen <code>transformers</code>-kirjaston Whisper-malleja suomenkielisen puheen tunnistamiseen. Notebook lukee itse nauhoitetut alle 30 sekunnin äänitteet kansiosta <code>audio_samples</code> ja ajaa vertailun usealla mallikoolla.</p>
+<p><strong>Tekoälyn käyttö:</strong> Notebookin runko, analyysikysymykset ja raporttirakenne on laadittu Codex-avustajalla. Ääninäytteet on nauhoitettu itse, ja lopullinen arviointi täydennetään ajotulosten perusteella.</p>
 </div>
 </div>
 </div>
@@ -7814,13 +7814,13 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Mel-spektrogrammi-omin-sanoin">Mel-spektrogrammi omin sanoin<a class="anchor-link" href="#Mel-spektrogrammi-omin-sanoin">¶</a></h2><p>Whisper ei sy?t? neuroverkolle raakaa ??niaaltoa. ??ni muunnetaan ensin mel-spektrogrammiksi.</p>
+<h2 id="Mel-spektrogrammi-omin-sanoin">Mel-spektrogrammi omin sanoin<a class="anchor-link" href="#Mel-spektrogrammi-omin-sanoin">¶</a></h2><p>Whisper ei syötä neuroverkolle raakaa ääniaaltoa. Ääni muunnetaan ensin mel-spektrogrammiksi.</p>
 <ul>
-<li><strong>x-akseli</strong> kuvaa aikaa: vasemmalta oikealle edet??n ??nitteen alusta loppuun.</li>
-<li><strong>y-akseli</strong> kuvaa taajuuksia mel-asteikolla. Mel-asteikko painottaa taajuuksia ihmiskuulon kannalta mielekk??mmin kuin lineaarinen hertsiasteikko.</li>
-<li><strong>v?ri</strong> kuvaa voimakkuutta desibelein?. Kirkkaammat tai voimakkaammat v?rit tarkoittavat, ett? kyseisell? ajanhetkell? ja taajuusalueella on enemm?n energiaa.</li>
+<li><strong>x-akseli</strong> kuvaa aikaa: vasemmalta oikealle edetään äänitteen alusta loppuun.</li>
+<li><strong>y-akseli</strong> kuvaa taajuuksia mel-asteikolla. Mel-asteikko painottaa taajuuksia ihmiskuulon kannalta mielekkäämmin kuin lineaarinen hertsiasteikko.</li>
+<li><strong>väri</strong> kuvaa voimakkuutta desibeleinä. Kirkkaammat tai voimakkaammat värit tarkoittavat, että kyseisellä ajanhetkellä ja taajuusalueella on enemmän energiaa.</li>
 </ul>
-<p>T?m? esitysmuoto sopii neuroverkolle paremmin kuin raaka aalto, koska puheen olennaiset piirteet, kuten vokaalit, konsonantit ja ??nenpainot, n?kyv?t paikallisina kuvioina ajan ja taajuuden tasossa. Transformer saa siis j?rjestetyn piirrejonon, jota se voi k?sitell? samaan tapaan kuin osassa 1 tokenijonoa.</p>
+<p>Tämä esitysmuoto sopii neuroverkolle paremmin kuin raaka aalto, koska puheen olennaiset piirteet, kuten vokaalit, konsonantit ja äänenpainot, näkyvät paikallisina kuvioina ajan ja taajuuden tasossa. Transformer saa siis järjestetyn piirrejonon, jota se voi käsitellä samaan tapaan kuin osassa 1 tokenijonoa.</p>
 </div>
 </div>
 </div>
@@ -7870,15 +7870,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="??nin?ytteet">??nin?ytteet<a class="anchor-link" href="#??nin?ytteet">¶</a></h2><p>Lis?? omat tiedostot kansioon <code>audio_samples</code>. Suositeltu rakenne:</p>
-<ul>
-<li><code>selkea_puhe.wav</code>: selke? suomenkielinen puhe</li>
-<li><code>taustahaly.wav</code>: sama tai vastaava lause taustah?lyll?</li>
-<li><code>eri_puhuja.wav</code>: eri puhujan ??ni</li>
-<li><code>murre.wav</code>: murteellinen puhe</li>
-<li><code>english.wav</code>: lyhyt englanninkielinen puhe</li>
-</ul>
-<p>Kirjoita <code>sample_descriptions</code>-sanakirjaan kunkin n?ytteen oikea teksti tai arvioitu sis?lt?. Sit? k?ytet??n tarkkuuden arviointiin.</p>
+<h2 id="%C3%84%C3%A4nin%C3%A4ytteet">Ääninäytteet<a class="anchor-link" href="#%C3%84%C3%A4nin%C3%A4ytteet">¶</a></h2><p>Notebook lukee äänitiedostot automaattisesti kansiosta <code>audio_samples</code>. Tässä projektissa käytössä on useita lyhyitä itse nauhoitettuja näytteitä: selkeä puhe, taustahäly, nopeampi tai epäselvempi puhe, murteellinen/puhekielinen puhe sekä englanninkielisiä vertailunäytteitä.</p>
+<p>Kaikki nykyiset <code>.wav</code>-tiedostot ovat tarkistuksen perusteella 16 kHz mono -ääntä ja alle 30 sekuntia pitkiä, joten ne sopivat hyvin Whisperin kokeiluun.</p>
+<p>Jos tiedät jonkin näytteen tarkan sanamuodon, lisää se <code>oikea_teksti</code>-kenttään. Silloin notebook voi laskea myös WER-virhemittarin.</p>
 </div>
 </div>
 </div>
@@ -7894,18 +7888,53 @@ a.anchor-link {
 <span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">sample_descriptions</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="c1"># "selkea_puhe.wav": {</span>
-    <span class="c1">#     "kuvaus": "Selke? suomenkielinen puhe, yksi puhuja, hiljainen huone.",</span>
-    <span class="c1">#     "oikea_teksti": "T?m? on ensimm?inen kokeilu tunnistaa suomenkielist? puhetta.",</span>
-    <span class="c1"># },</span>
+    <span class="s2">"selkea_puhe.wav"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen puhe, rauhallinen lukutapa."</span><span class="p">,</span>
+        <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">"Tämä on selkeä suomenkielinen ääninäyte. Puhun rauhallisesti ja yritän ääntää sanat mahdollisimman tarkasti."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">"taustahaly.wav"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Suomenkielinen puhe taustahälyn kanssa."</span><span class="p">,</span>
+        <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">"Tämä ääninäyte on nauhoitettu taustahälyn kanssa. Tarkoitus on testata, tunnistaako Whisper puheen myös vaikeammassa tilanteessa."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">"aaninayte_nopea.wav"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Nopeampi tai hieman epäselvempi suomenkielinen puhe."</span><span class="p">,</span>
+        <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">"Nyt puhun vähän nopeammin ja epäselvemmin, jotta nähdään kuinka hyvin puheentunnistus toimii, kun ääntäminen ei ole aivan rauhallista."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">"murre_aaninayte.wav"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Puhekielinen tai murteellinen suomenkielinen näyte."</span><span class="p">,</span>
+        <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">"No miepä sanon tämän vähän rennommin, että nähdään miten malli pärjää, kun puhe ei ole ihan kirjakieltä."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">"murre_aaninayte2.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Toinen puhekielinen tai murteellinen suomenkielinen näyte."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"english_sample1.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Englanninkielinen vertailunäyte."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"english_sample2.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Englanninkielinen vertailunäyte."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"english_sample3.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Englanninkielinen vertailunäyte."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"english_sample_fast.wav"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Nopea englanninkielinen vertailunäyte."</span><span class="p">,</span>
+        <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">"This is a short English speech sample for testing how well Whisper recognizes another language."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">"selkea_puhe_1.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 1."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"selkea_puhe_2.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 2."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"selkea_puhe_3.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 3."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"selkea_puhe_4.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 4."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
+    <span class="s2">"selkea_puhe_5.wav"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kuvaus"</span><span class="p">:</span> <span class="s2">"Selkeä suomenkielinen lisänäyte 5."</span><span class="p">,</span> <span class="s2">"oikea_teksti"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
 <span class="p">}</span>
 
-<span class="n">supported</span> <span class="o">=</span> <span class="p">{</span><span class="s2">".wav"</span><span class="p">,</span> <span class="s2">".mp3"</span><span class="p">,</span> <span class="s2">".m4a"</span><span class="p">,</span> <span class="s2">".flac"</span><span class="p">,</span> <span class="s2">".ogg"</span><span class="p">}</span>
-<span class="n">audio_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">supported</span><span class="p">])</span>
+<span class="n">selected_audio_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"selkea_puhe.wav"</span><span class="p">,</span>
+    <span class="s2">"taustahaly.wav"</span><span class="p">,</span>
+    <span class="s2">"aaninayte_nopea.wav"</span><span class="p">,</span>
+    <span class="s2">"murre_aaninayte.wav"</span><span class="p">,</span>
+    <span class="s2">"english_sample_fast.wav"</span><span class="p">,</span>
+<span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L?ytyi </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> ??nitiedostoa kansiosta </span><span class="si">{</span><span class="n">AUDIO_DIR</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">audio_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">AUDIO_DIR</span> <span class="o">/</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">selected_audio_names</span> <span class="k">if</span> <span class="p">(</span><span class="n">AUDIO_DIR</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
+<span class="n">missing_audio</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">selected_audio_names</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">AUDIO_DIR</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Valittuja ??nitiedostoja: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_files</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">audio_files</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">missing_audio</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Puuttuvat tiedostot:"</span><span class="p">,</span> <span class="n">missing_audio</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7923,7 +7952,7 @@ a.anchor-link {
     <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">target_sr</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">get_duration</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">duration</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Varoitus: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s. Whisperin peruskokeeseen suositellaan alle 30 s p?tki?."</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Varoitus: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s. Whisperin peruskokeeseen suositellaan alle 30 s pätkiä."</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">duration</span>
 
 <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">audio_files</span><span class="p">:</span>
@@ -7944,7 +7973,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Mel-spektrogrammin-visualisointi">Mel-spektrogrammin visualisointi<a class="anchor-link" href="#Mel-spektrogrammin-visualisointi">¶</a></h2><p>Aja seuraava solu yhdelle tai useammalle n?ytteelle ja liit? havaintosi raporttiin. Kiinnit? huomiota siihen, miss? kohtaa puhe, tauot ja mahdollinen taustah?ly n?kyv?t.</p>
+<h2 id="Mel-spektrogrammin-visualisointi">Mel-spektrogrammin visualisointi<a class="anchor-link" href="#Mel-spektrogrammin-visualisointi">¶</a></h2><p>Aja seuraava solu yhdelle tai useammalle näytteelle ja liitä havaintosi raporttiin. Kiinnitä huomiota siihen, missä kohtaa puhe, tauot ja mahdollinen taustahäly näkyvät.</p>
 </div>
 </div>
 </div>
@@ -7974,7 +8003,7 @@ a.anchor-link {
 <span class="k">if</span> <span class="n">audio_files</span><span class="p">:</span>
     <span class="n">plot_mel_spectrogram</span><span class="p">(</span><span class="n">audio_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Lis?? ??nitiedostoja audio_samples-kansioon ja aja solu uudelleen."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Lisää äänitiedostoja audio_samples-kansioon ja aja solu uudelleen."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7987,7 +8016,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Whisper-mallien-vertailu">Whisper-mallien vertailu<a class="anchor-link" href="#Whisper-mallien-vertailu">¶</a></h2><p>Oletuksena vertaillaan malleja <code>tiny</code> ja <code>base</code>, koska ne latautuvat ja ajavat kohtuullisen nopeasti. Lis?? listaan esimerkiksi <code>small</code> tai <code>large-v3</code>, jos k?yt?ss? on tarpeeksi muistia ja aikaa.</p>
+<h2 id="Whisper-mallien-vertailu">Whisper-mallien vertailu<a class="anchor-link" href="#Whisper-mallien-vertailu">¶</a></h2><p>Oletuksena vertaillaan malleja <code>tiny</code> ja <code>base</code>, koska ne latautuvat ja ajavat kohtuullisen nopeasti. Lisää listaan esimerkiksi <code>small</code> tai <code>large-v3</code>, jos käytössä on tarpeeksi muistia ja aikaa.</p>
 </div>
 </div>
 </div>
@@ -8049,11 +8078,13 @@ a.anchor-link {
 
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">audio_files</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Tunnistetaan: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">prediction</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">transcribe</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">whisper_model</span><span class="p">)</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="s2">"en"</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"fi"</span>
+        <span class="n">prediction</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">transcribe</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">whisper_model</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">sample_descriptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"oikea_teksti"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s2">"malli"</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span>
             <span class="s2">"tiedosto"</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">"kieli"</span><span class="p">:</span> <span class="n">language</span><span class="p">,</span>
             <span class="s2">"kesto_s"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
             <span class="s2">"aika_s"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
             <span class="s2">"reaaliaikakerroin"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">seconds</span> <span class="o">/</span> <span class="n">duration</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">duration</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
@@ -8080,7 +8111,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># Valinnainen WER-laskenta, jos olet t?ytt?nyt oikeat tekstit.</span>
+<div class="highlight hl-python"><pre><span></span><span class="c1"># Valinnainen WER-laskenta, jos olet täyttänyt oikeat tekstit.</span>
 <span class="c1"># %pip install jiwer</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">jiwer</span><span class="w"> </span><span class="kn">import</span> <span class="n">wer</span>
@@ -8089,9 +8120,9 @@ a.anchor-link {
             <span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">wer</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"oikea_teksti"</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">"tunnistus"</span><span class="p">])</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">"oikea_teksti"</span><span class="p">]</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">display</span><span class="p">(</span><span class="n">results_df</span><span class="p">[[</span><span class="s2">"malli"</span><span class="p">,</span> <span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">"aika_s"</span><span class="p">,</span> <span class="s2">"reaaliaikakerroin"</span><span class="p">,</span> <span class="s2">"WER"</span><span class="p">,</span> <span class="s2">"tunnistus"</span><span class="p">]])</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">results_df</span><span class="p">[[</span><span class="s2">"malli"</span><span class="p">,</span> <span class="s2">"tiedosto"</span><span class="p">,</span> <span class="s2">"kieli"</span><span class="p">,</span> <span class="s2">"aika_s"</span><span class="p">,</span> <span class="s2">"reaaliaikakerroin"</span><span class="p">,</span> <span class="s2">"WER"</span><span class="p">,</span> <span class="s2">"tunnistus"</span><span class="p">]])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"T?yt? oikea_teksti-arvot sample_descriptions-sanastoon, jos haluat laskea WER-luvun."</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Täytä oikea_teksti-arvot sample_descriptions-sanastoon, jos haluat laskea WER-luvun."</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"WER-laskentaa ei ajettu:"</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
 </pre></div>
@@ -8106,68 +8137,84 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Raportointitaulukko">Raportointitaulukko<a class="anchor-link" href="#Raportointitaulukko">¶</a></h2><p>T?ydenn? ajon j?lkeen tuloksilla.</p>
+<h2 id="Raportointitaulukko-ja-tulokset">Raportointitaulukko ja tulokset<a class="anchor-link" href="#Raportointitaulukko-ja-tulokset">¶</a></h2><p>Vertailu ajettiin viidell? itse nauhoitetulla n?ytteell? ja kahdella Whisper-mallilla: <code>tiny</code> ja <code>base</code>. Ajo tehtiin CPU:lla, joten nopeusluvut kuvaavat t?m?n koneen paikallista suoritusta.</p>
 <table>
 <thead>
 <tr>
 <th>??nin?yte</th>
-<th>Kuvaus</th>
-<th>tiny: tulos/nopeus</th>
-<th>base: tulos/nopeus</th>
-<th>small/large: tulos/nopeus</th>
-<th>havainto</th>
+<th style="text-align:right">Kesto</th>
+<th style="text-align:right">tiny</th>
+<th style="text-align:right">base</th>
+<th>base-mallin tunnistus</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>selke? puhe</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>pienikin malli voi riitt??</td>
+<td><code>selkea_puhe.wav</code></td>
+<td style="text-align:right">9.75 s</td>
+<td style="text-align:right">1.05 s, WER 1.23</td>
+<td style="text-align:right">1.82 s, WER 1.23</td>
+<td>Tämä on selkeä Suomen kielinen aanninäötä. Kiinnit on huomioita siihen, että puhun tasaisesti ja aantaminen on selkeää.</td>
 </tr>
 <tr>
-<td>taustah?ly</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>h?ly lis?? virheit?</td>
+<td><code>taustahaly.wav</code></td>
+<td style="text-align:right">7.70 s</td>
+<td style="text-align:right">0.83 s, WER 0.87</td>
+<td style="text-align:right">1.79 s, WER 0.67</td>
+<td>Tämä on näytöön nauhoitettu taustahälön kanssa. Alue on testata tunnistakouhelman puheen myös vaikeamassa tilanteessa.</td>
 </tr>
 <tr>
-<td>eri puhuja</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>??nenlaatu ja artikulaatio vaikuttavat</td>
+<td><code>aaninayte_nopea.wav</code></td>
+<td style="text-align:right">5.91 s</td>
+<td style="text-align:right">1.05 s, WER 0.83</td>
+<td style="text-align:right">1.75 s, WER 0.78</td>
+<td>Puhun vähän nopeammin ja epäselvämin, jotta nähdään kuinka hyvin puheen tunnistus toimii kuin aantaminen ja jälattää sin...</td>
 </tr>
 <tr>
-<td>murre</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>murre voi tuottaa normalisointia tai v??rinkuulemista</td>
+<td><code>murre_aaninayte.wav</code></td>
+<td style="text-align:right">4.37 s</td>
+<td style="text-align:right">0.61 s, WER 1.00</td>
+<td style="text-align:right">1.08 s, WER 1.00</td>
+<td>ja hissuksia ja koita sanot niin seläkästikko ossaan.</td>
 </tr>
 <tr>
-<td>englanti</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>t?yt?</td>
-<td>englanti toimii usein hyvin, koska Whisper on monikielisesti esikoulutettu</td>
+<td><code>english_sample_fast.wav</code></td>
+<td style="text-align:right">4.71 s</td>
+<td style="text-align:right">0.53 s, WER 0.53</td>
+<td style="text-align:right">1.00 s, WER 0.07</td>
+<td>This is a short English speech sample for testing how a Whisper recognizes another language.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="Analyysi">Analyysi<a class="anchor-link" href="#Analyysi">¶</a></h3><ul>
-<li>Mallin koon kasvaessa tunnistus yleens? paranee, mutta lataus, muistinkulutus ja laskenta-aika kasvavat.</li>
-<li>Pieni malli riitt?? selke??n, lyhyeen ja hyvin ??nitettyyn puheeseen.</li>
-<li>Suurempi malli auttaa ep?selv?ss? puheessa, taustah?lyss?, murteissa ja silloin, kun tarvitaan parempaa oikeinkirjoitusta.</li>
-<li>Meluisa ??ni voi aiheuttaa puuttuvia sanoja, keksittyj? sanoja tai v??r?n kielen/tulkinnan.</li>
-<li>Whisperin mel-spektrogrammi vastaa osan 1 tokenijonoa siin? mieless?, ett? molemmissa transformer k?sittelee j?rjestetty? sy?tejonoa. Osassa 1 sy?te on tekstin tokenisarja, osassa 2 sy?te on ??nen aika-taajuuspiirteiden sarja.</li>
-</ul>
+<p>Keskiarvot:</p>
+<table>
+<thead>
+<tr>
+<th>Malli</th>
+<th style="text-align:right">Keskim??r?inen ajoaika</th>
+<th style="text-align:right">Keskim??r?inen reaaliaikakerroin</th>
+<th style="text-align:right">Keskim??r?inen WER</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tiny</td>
+<td style="text-align:right">0.81 s</td>
+<td style="text-align:right">0.13</td>
+<td style="text-align:right">0.89</td>
+</tr>
+<tr>
+<td>base</td>
+<td style="text-align:right">1.49 s</td>
+<td style="text-align:right">0.24</td>
+<td style="text-align:right">0.75</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Analyysi">Analyysi<a class="anchor-link" href="#Analyysi">¶</a></h3><p>Tulosten perusteella <code>tiny</code> on nopeampi, mutta sen tunnistus tekee paljon virheit? erityisesti suomenkielisiss? n?ytteiss?. <code>base</code> on hitaampi, mutta se paransi tulosta etenkin taustah?lyss?, nopeassa puheessa ja englanninkielisess? n?ytteess?. Englanninkielinen n?yte onnistui <code>base</code>-mallilla parhaiten, mik? on odotettavaa, koska Whisperin koulutusaineistossa englanti on vahvasti edustettuna.</p>
+<p>Suomenkielisiss? n?ytteiss? molemmat mallit tunnistivat aiheen ja osan sanoista, mutta tuottivat my?s paljon kirjoitusvirheit? ja v??rinkuultuja sanoja. Murteellinen tai puhekielinen n?yte oli vaikein: kumpikaan malli ei saanut sit? kovin tarkasti oikein. Taustah?ly heikensi tulosta, mutta <code>base</code> s?ilytti enemm?n alkuper?isen lauseen rakenteesta kuin <code>tiny</code>.</p>
+<p>WER-luvut ovat korkeita, joten n?it? pieni? malleja ei kannata pit?? t?ydellisin? suomenkielisen puheen tunnistimina. Ne kuitenkin osoittavat mallikoon vaikutuksen: suurempi malli on hitaampi mutta yleens? tarkempi. Jos tavoitteena olisi paras mahdollinen tunnistus, seuraavaksi kannattaisi ajaa <code>small</code> tai <code>large-v3</code> GPU-ymp?rist?ss?, esimerkiksi Google Colabissa.</p>
+<h3 id="Yhteys-osaan-1">Yhteys osaan 1<a class="anchor-link" href="#Yhteys-osaan-1">¶</a></h3><p>Osassa 1 transformer k?sitteli tekstin tokenijonoa ja ennusti seuraavaa tokenia. Whisperiss? sy?te ei ole tekstin?, vaan ??ni muunnetaan ensin mel-spektrogrammiksi eli aika-taajuuspiirteiden jonoksi. Molemmissa tapauksissa transformer hy?dynt?? attention-mekanismia j?rjestetyn sy?tteen riippuvuuksien mallintamiseen. T?m? on transformerien vahvuus: sama perusidea sopii sek? tekstin ett? puheen kaltaisiin sekventiaalisiin aineistoihin.</p>
 </div>
 </div>
 </div>
@@ -8178,7 +8225,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Vapaaehtoinen-Gradio-k?ytt?liittym?">Vapaaehtoinen Gradio-k?ytt?liittym?<a class="anchor-link" href="#Vapaaehtoinen-Gradio-k?ytt?liittym?">¶</a></h2><p>Jos haluat kokeilla mikrofonia selaimessa, poista kommentit ja aja solu. T?m? ei ole pakollinen palautukseen.</p>
+<h2 id="Vapaaehtoinen-Gradio-k%C3%A4ytt%C3%B6liittym%C3%A4">Vapaaehtoinen Gradio-käyttöliittymä<a class="anchor-link" href="#Vapaaehtoinen-Gradio-k%C3%A4ytt%C3%B6liittym%C3%A4">¶</a></h2><p>Jos haluat kokeilla mikrofonia selaimessa, poista kommentit ja aja solu. Tämä ei ole pakollinen palautukseen.</p>
 </div>
 </div>
 </div>
