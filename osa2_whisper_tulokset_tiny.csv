@@ -1,15 +1,15 @@
-﻿malli,tiedosto,kieli,kesto_s,aika_s,reaaliaikakerroin,oikea_teksti,tunnistus,WER
-tiny,aaninayte_nopea.wav,fi,5.91,1.15,0.19,"Nyt puhun v?h?n nopeammin ja ep?selvemmin, jotta n?hd??n kuinka hyvin puheentunnistus toimii, kun ??nt?minen ei ole aivan rauhallista.","Puhulvahan nopeammin ja epäselvämin, jolla nähdään kuinka hyvin puheen tunnistustoimin kuin aantaminen ja ja laittää yksin selkeä.",0.8333333333333334
-tiny,english_sample1.wav,en,8.81,0.61,0.07,,T.C. is a short English-peed sample for testing how well the program recognizes another language.,
-tiny,english_sample2.wav,en,9.24,0.44,0.05,,This is a short English speed sample for testing how well whisper recognizes another language.,
-tiny,english_sample3.wav,en,6.08,0.53,0.09,,This is a short English speech sample for testing how well these per record passes on a trot language.,
-tiny,english_sample_fast.wav,en,4.71,0.61,0.13,This is a short English speech sample for testing how well Whisper recognizes another language.,This is a shorting speed sample for testing how well vis-pro record passes on other language.,0.5333333333333333
-tiny,murre_aaninayte.wav,fi,4.37,0.67,0.15,"No miep? sanon t?m?n v?h?n rennommin, ett? n?hd??n miten malli p?rj??, kun puhe ei ole ihan kirjakielt?.","hieni histukseen, koita sanon sanot niin seläkestekku ossoa.",1.0
-tiny,murre_aaninayte2.wav,fi,4.97,0.72,0.14,,"Mietpuhun ihan hisuksia ja koetaan sanossa on, että mahdollisimman seläkestin.",
-tiny,selkea_puhe.wav,fi,9.75,1.24,0.13,T?m? on selke? suomenkielinen ??nin?yte. Puhun rauhallisesti ja yrit?n ??nt?? sanat mahdollisimman tarkasti.,"Tämä on selkeä Suomen kielenen äänen äänenäytä. Kiinit on huomioita siihen, että puhuntasaisesti ja ääntäminen on selkeää.",1.2307692307692308
-tiny,selkea_puhe_1.wav,fi,15.0,1.52,0.1,,Suomen kielikuluurallilaisen kielikuntaan ja sen suomalaisukkilaisen haaran itäveren suomalaisiin kieliin Suomen kielen puhujia on noin kuusimiljona.,
-tiny,selkea_puhe_2.wav,fi,15.0,0.55,0.04,,Suomen keli on tyydyksen saadaan luon mittaan suuri.,
-tiny,selkea_puhe_3.wav,fi,15.0,1.54,0.1,,"Uudenpia Suomalaisuithmiä on syntynyt elroppaan sekä etenkin tuohat kadeksansa taluvulla pohjoisamerikkaan, jossa suurin osasirta laisiaan kuitenkin jo kielellisesti sulautunut.",
-tiny,selkea_puhe_4.wav,fi,15.0,1.39,0.09,,"muuttoliikkentuloksena ruotsiin. Suomen kieli on voimakkaasti tai pova, algelutinoivakielin. Sanajärjestys on toisiainen ja lauseen ja senten perusjärjestys on sukellaan.",
-tiny,selkea_puhe_5.wav,fi,15.0,1.19,0.08,,Suomen kielikuluurailaisen kielikuntaan ja sen suomalaisuukkilaisen haram itäveren suomalaisiin kieliin Suomen kielen puhujia on noin kuusimiljona.,
-tiny,taustahaly.wav,fi,7.7,0.96,0.12,"T?m? ??nin?yte on nauhoitettu taustah?lyn kanssa. Tarkoitus on testata, tunnistaako Whisper puheen my?s vaikeammassa tilanteessa.","Tämä on näytä on lautettu taustahely on kanssa. Lua on testotat tunnistakohjema puheen myös vaikea, mutta tilanteessa.",0.8666666666666667
+﻿malli,tiedosto,kieli,kesto_s,aika_s,reaaliaikakerroin,oikea_teksti,tunnistus
+tiny,aaninayte_nopea.wav,fi,5.91,1.15,0.19,,"Puhulvahan nopeammin ja epäselvämin, jolla nähdään kuinka hyvin puheen tunnistustoimin kuin aantaminen ja ja laittää yksin selkeä."
+tiny,english_sample1.wav,en,8.81,0.61,0.07,,T.C. is a short English-peed sample for testing how well the program recognizes another language.
+tiny,english_sample2.wav,en,9.24,0.44,0.05,,This is a short English speed sample for testing how well whisper recognizes another language.
+tiny,english_sample3.wav,en,6.08,0.53,0.09,,This is a short English speech sample for testing how well these per record passes on a trot language.
+tiny,english_sample_fast.wav,en,4.71,0.61,0.13,,This is a shorting speed sample for testing how well vis-pro record passes on other language.
+tiny,murre_aaninayte.wav,fi,4.37,0.67,0.15,,"hieni histukseen, koita sanon sanot niin seläkestekku ossoa."
+tiny,murre_aaninayte2.wav,fi,4.97,0.72,0.14,,"Mietpuhun ihan hisuksia ja koetaan sanossa on, että mahdollisimman seläkestin."
+tiny,selkea_puhe.wav,fi,9.75,1.24,0.13,,"Tämä on selkeä Suomen kielenen äänen äänenäytä. Kiinit on huomioita siihen, että puhuntasaisesti ja ääntäminen on selkeää."
+tiny,selkea_puhe_1.wav,fi,15.0,1.52,0.1,,Suomen kielikuluurallilaisen kielikuntaan ja sen suomalaisukkilaisen haaran itäveren suomalaisiin kieliin Suomen kielen puhujia on noin kuusimiljona.
+tiny,selkea_puhe_2.wav,fi,15.0,0.55,0.04,,Suomen keli on tyydyksen saadaan luon mittaan suuri.
+tiny,selkea_puhe_3.wav,fi,15.0,1.54,0.1,,"Uudenpia Suomalaisuithmiä on syntynyt elroppaan sekä etenkin tuohat kadeksansa taluvulla pohjoisamerikkaan, jossa suurin osasirta laisiaan kuitenkin jo kielellisesti sulautunut."
+tiny,selkea_puhe_4.wav,fi,15.0,1.39,0.09,,"muuttoliikkentuloksena ruotsiin. Suomen kieli on voimakkaasti tai pova, algelutinoivakielin. Sanajärjestys on toisiainen ja lauseen ja senten perusjärjestys on sukellaan."
+tiny,selkea_puhe_5.wav,fi,15.0,1.19,0.08,,Suomen kielikuluurailaisen kielikuntaan ja sen suomalaisuukkilaisen haram itäveren suomalaisiin kieliin Suomen kielen puhujia on noin kuusimiljona.
+tiny,taustahaly.wav,fi,7.7,0.96,0.12,,"Tämä on näytä on lautettu taustahely on kanssa. Lua on testotat tunnistakohjema puheen myös vaikea, mutta tilanteessa."
